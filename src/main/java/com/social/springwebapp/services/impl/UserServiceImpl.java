@@ -2,7 +2,6 @@ package com.social.springwebapp.services.impl;
 
 import com.social.springwebapp.zdao.entities.User;
 import com.social.springwebapp.exceptions.EmailAlreadyUsedException;
-import com.social.springwebapp.UserMapper;
 import com.social.springwebapp.zdao.repository.UserRepository;
 import com.social.springwebapp.services.UserService;
 import com.social.springwebapp.services.dto.UserDTO;
@@ -25,12 +24,12 @@ public class UserServiceImpl implements UserService {
 
     private final Logger log = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
+    private ModelMapper modelMapper;
 
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
         this.userRepository = userRepository;
-        this.userMapper = userMapper;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -39,10 +38,9 @@ public class UserServiceImpl implements UserService {
             throw new EmailAlreadyUsedException(userDTO.getEmail());
         });
         log.debug("Request to save User : {}", userDTO);
-        ModelMapper modelMapper = new ModelMapper();
         User user = modelMapper.map(userDTO, User.class);
         user = userRepository.save(user);
-        return userMapper.toDto(user);
+        return modelMapper.map(user, UserDTO.class);
     }
 
     @Override

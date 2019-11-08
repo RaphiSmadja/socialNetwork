@@ -1,4 +1,4 @@
-package com.social.springwebapp.mapper;
+package com.social.springwebapp.services.mapper;
 
 import java.util.Collection;
 

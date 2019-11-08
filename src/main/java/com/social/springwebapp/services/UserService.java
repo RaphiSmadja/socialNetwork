@@ -7,8 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-@Service
-@Transactional
 public interface UserService {
     /**
      * Save a user.

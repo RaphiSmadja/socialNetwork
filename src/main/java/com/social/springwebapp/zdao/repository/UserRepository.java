@@ -1,6 +1,6 @@
-package com.social.springwebapp.repository;
+package com.social.springwebapp.zdao.repository;
 
-import com.social.springwebapp.entities.User;
+import com.social.springwebapp.zdao.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

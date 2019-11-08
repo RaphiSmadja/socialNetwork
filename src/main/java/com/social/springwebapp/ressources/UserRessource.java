@@ -1,15 +1,14 @@
 package com.social.springwebapp.ressources;
 
-import com.social.springwebapp.entities.User;
+import com.social.springwebapp.zdao.entities.User;
 import com.social.springwebapp.exceptions.UserNotFoundException;
-import com.social.springwebapp.repository.UserRepository;
+import com.social.springwebapp.zdao.repository.UserRepository;
 import com.social.springwebapp.services.UserService;
 import com.social.springwebapp.services.dto.UserDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;

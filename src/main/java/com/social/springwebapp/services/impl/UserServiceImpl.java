@@ -1,9 +1,9 @@
-package com.social.springwebapp.impl;
+package com.social.springwebapp.services.impl;
 
-import com.social.springwebapp.entities.User;
+import com.social.springwebapp.zdao.entities.User;
 import com.social.springwebapp.exceptions.EmailAlreadyUsedException;
-import com.social.springwebapp.mapper.UserMapper;
-import com.social.springwebapp.repository.UserRepository;
+import com.social.springwebapp.services.mapper.UserMapper;
+import com.social.springwebapp.zdao.repository.UserRepository;
 import com.social.springwebapp.services.UserService;
 import com.social.springwebapp.services.dto.UserDTO;
 import org.slf4j.Logger;

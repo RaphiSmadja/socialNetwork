@@ -1,6 +1,5 @@
-package com.social.springwebapp.entities;
+package com.social.springwebapp.zdao.entities;
 
-import com.social.springwebapp.services.dto.UserDTO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

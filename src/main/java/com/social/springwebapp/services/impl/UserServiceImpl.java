@@ -33,29 +33,39 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO save(UserDTO userDTO) {
+    public User save(UserDTO userDTO) {
         userRepository.findOneByEmail(userDTO.getEmail()).ifPresent(existingUser -> {
             throw new EmailAlreadyUsedException(userDTO.getEmail());
         });
         log.debug("Request to save User : {}", userDTO);
         User user = modelMapper.map(userDTO, User.class);
         user = userRepository.save(user);
-        return modelMapper.map(user, UserDTO.class);
+        return user;
     }
 
     @Override
-    public List<UserDTO> findAll() {
-        return null;
+    public User update(UserDTO userDTO) {
+        User user = modelMapper.map(userDTO, User.class);
+        return userRepository.save(user);
     }
 
     @Override
-    public Optional<UserDTO> findOne(Long id) {
-        return Optional.empty();
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public Optional<User> findOne(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isEmpty()){
+            return Optional.empty();
+        }
+        return user;
     }
 
     @Override
     public void delete(Long id) {
-
+        userRepository.delete(userRepository.findById(id).get());
     }
 
     @Override

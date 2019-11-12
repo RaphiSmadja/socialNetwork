@@ -1,8 +1,7 @@
 package com.social.springwebapp.services;
 
 import com.social.springwebapp.services.dto.UserDTO;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import com.social.springwebapp.zdao.entities.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,14 +13,18 @@ public interface UserService {
      * @param userDTO the entity to save.
      * @return the persisted entity.
      */
-    UserDTO save(UserDTO userDTO);
+    User save(UserDTO userDTO);
 
     /**
      * Get all the users.
      *
      * @return the list of entities.
      */
-    List<UserDTO> findAll();
+
+    User update(UserDTO userDTO);
+
+
+    List<User> findAll();
 
 
     /**
@@ -30,7 +33,7 @@ public interface UserService {
      * @param id the id of the entity.
      * @return the entity.
      */
-    Optional<UserDTO> findOne(Long id);
+    Optional<User> findOne(Long id);
 
     /**
      * Delete the "id" user.

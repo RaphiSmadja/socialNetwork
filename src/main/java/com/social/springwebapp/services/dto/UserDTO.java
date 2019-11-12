@@ -14,6 +14,4 @@ public class UserDTO {
     private String city;
     private int postalcode;
     private String address;
-
-
 }

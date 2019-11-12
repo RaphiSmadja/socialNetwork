@@ -1,15 +1,13 @@
 package com.social.springwebapp.ressources;
 
 import com.social.springwebapp.zdao.entities.User;
-import com.social.springwebapp.exceptions.UserNotFoundException;
-import com.social.springwebapp.zdao.repository.UserRepository;
 import com.social.springwebapp.services.UserService;
 import com.social.springwebapp.services.dto.UserDTO;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,34 +15,58 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class UserRessource {
 
-    private final UserRepository userRepository;
-
-    private String applicationName;
     private final UserService userService;
+    private final ModelMapper modelMapper;
 
-    public UserRessource(UserRepository userRepository, UserService userService) {
-        this.userRepository = userRepository;
+    public UserRessource(UserService userService, ModelMapper modelMapper) {
         this.userService = userService;
+        this.modelMapper = modelMapper;
     }
 
     @GetMapping("/user")
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> userList = userService.findAll();
+        return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 
     @GetMapping("/user/{id}")
-    public User getOneUser(@PathVariable Long id) {
-        Optional<User> student = userRepository.findById(id);
-
-        if (student.isEmpty())
-            throw new UserNotFoundException(""+id);
-
-        return student.get();
+    public ResponseEntity<Optional<User>> getOneUser(@PathVariable(value = "id") Long id) {
+        Optional<User> user = userService.findOne(id);
+        if (user.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(user, HttpStatus.FOUND);
     }
 
     @PostMapping("/user")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userRequestDTO) throws URISyntaxException {
+    public ResponseEntity<User> createUser(@RequestBody UserDTO userRequestDTO) {
         return new ResponseEntity<>(userService.save(userRequestDTO), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/user/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable(value = "id") Long id, @RequestBody UserDTO userRequestDTO) {
+        Optional<User> userToUpdate = userService.findOne(id);
+        if (userToUpdate.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        userToUpdate.get().setFirstname(userRequestDTO.getFirstname());
+        userToUpdate.get().setLastname(userRequestDTO.getLastname());
+        userToUpdate.get().setEmail(userRequestDTO.getEmail());
+        userToUpdate.get().setPassword(userRequestDTO.getPassword());
+        userToUpdate.get().setCity(userRequestDTO.getCity());
+        userToUpdate.get().setPostalcode(userRequestDTO.getPostalcode());
+        userToUpdate.get().setAddress(userRequestDTO.getAddress());
+        UserDTO userDTO = modelMapper.map(userToUpdate.get(), UserDTO.class);
+        return new ResponseEntity<>(userService.update(userDTO), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/user/{id}")
+    public ResponseEntity deleteUser(@PathVariable(value = "id") Long id) {
+        Optional<User> userToUpdate = userService.findOne(id);
+        if (userToUpdate.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        userService.delete(id);
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
 }

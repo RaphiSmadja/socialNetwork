@@ -1,16 +1,10 @@
 pipeline {
-    agent any
-
+    agent { docker { image 'maven:3.3.3' } }
     stages {
         stage('Build') {
-            withMaven(maven: 'maven-3') {
-                  // Run the maven build
-                  sh "mvn clean install"
-
-                } // withMaven will discover the generated Maven artifacts, JUnit Surefire & FailSafe & FindBugs & SpotBugs reports...
             steps {
                 echo 'Building..'
-                mvn compile
+                sh 'mvn --version'
             }
         }
         stage('Test') {

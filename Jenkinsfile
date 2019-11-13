@@ -1,4 +1,5 @@
 pipeline {
+    agent any
     stages {
         stage('Build') {
             def mvnHome = tool name: 'maven-3', type: 'maven'

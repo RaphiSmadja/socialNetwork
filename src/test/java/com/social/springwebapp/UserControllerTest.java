@@ -1,41 +1,70 @@
 package com.social.springwebapp;
 
-import static org.hamcrest.Matchers.equalTo;
+import com.social.springwebapp.services.dto.UserDTO;
+import com.social.springwebapp.services.impl.UserServiceImpl;
 import com.social.springwebapp.zdao.entities.User;
+import com.social.springwebapp.zdao.repository.UserRepository;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.modelmapper.ModelMapper;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@AutoConfigureMockMvc
+@RunWith(MockitoJUnitRunner.class)
 public class UserControllerTest {
 
-    private User user = new User();
+    @Mock
+    private UserRepository userRepository;
 
-    /*@Test
-    public void userSaysHello() {
-        assertEquals(socialuser.getSayHello(), "Hello World");
-    }*/
+    @Mock
+    ModelMapper modelMapper;
 
-    @Autowired
-    private MockMvc mvc;
+    UserDTO userDTO;
+    User user;
+    UserServiceImpl userService;
+
+    @Before
+    public void setup() {
+        userDTO = new UserDTO();
+        userDTO.setFirstname("Raphael");
+        userDTO.setLastname("Smadja");
+        userDTO.setEmail("raphael.smadja@soat.fr");
+        userDTO.setPassword("azerty");
+        userDTO.setCity("Paris");
+        userDTO.setPostalcode(75012);
+        userDTO.setAddress("12 avenue general breton");
+        userDTO.setId(1L);
+
+        user = new User();
+        user.setFirstname("Raphael");
+        user.setLastname("Smadja");
+        user.setEmail("raphael.smadja@soat.fr");
+        user.setPassword("azerty");
+        user.setCity("Paris");
+        user.setPostalcode(75012);
+        user.setAddress("12 avenue general breton");
+        user.setId(1L);
+
+        userService = new UserServiceImpl(userRepository, modelMapper);
+    }
 
     @Ignore
     @Test
-    public void getAllUsers() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/user/").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string(equalTo(null)));
+    public void should_save_and_return_saved_object() throws Exception{
+        //Given
+
+        //When
+        User actual = userService.save(userDTO);
+
+        //Then
+        verify(userRepository, times(1)).save(user);
+        assertThat(actual).isNotNull();
+        assertThat(actual.getAddress()).isEqualTo(user.getAddress());
     }
 }
